@@ -1,0 +1,15 @@
+{
+  "name": "seo-autopilot",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Autonomous SEO agent built on claude-seo: audits, proposes fixes, asks for approval, applies, verifies and rolls back.",
+  "workspaces": ["packages/*", "apps/*"],
+  "scripts": {
+    "test": "npm run test --workspaces --if-present",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "dev:web": "npm run dev -w apps/web",
+    "build:web": "npm run build -w apps/web",
+    "runner": "npm run start -w apps/runner"
+  },
+  "engines": { "node": ">=20" }
+}

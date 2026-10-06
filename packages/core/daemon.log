@@ -1,0 +1,17 @@
+[2026-10-06T09:44:12.545Z] SEO Autopilot runner 0.1.0 "e2e" → http://localhost:8788
+[2026-10-06T09:44:12.916Z] Health problems: claude-seo runtime (run `seo-autopilot-runner doctor`)
+[2026-10-06T09:44:12.947Z] Claimed custom job 22222222-2222-4222-8222-222222222222 for https://example.com
+[2026-10-06T09:44:12.947Z] [22222222] info  Runner e2e picked up custom job for Example (https://example.com)
+[2026-10-06T09:44:12.950Z] [22222222] info  Running: claude -p "Use WebSearch five separate times for different SEO topics, then write a 2000-word essay.\n\n(Site: https://example.com. Write any files into the current working … [+11 chars]" --output-format stream-json --verbose --plugin-dir /home/claude/claude-seo --plugin-dir /home/claude/seo-autopilot/plugin --permission-mode dontAsk --permission-prompts none --allowedTools Read Write Edit Glob Grep WebFetch WebSearch Agent Skill "Bash(/home/claude/claude-seo/scripts/claude-seo *)" --max-budget-usd 1 --append-system-prompt-file /tmp/claude-0/e2e/home/runner-rules.md
+[2026-10-06T09:44:14.545Z] [22222222] info  Claude session 1842b0f4-d948-5fec-90e6-ab3fe92adb55 started (model claude-sonnet-5-5); plugins: claude-seo, seo-autopilot, searchfit-seo, design, cowork-plugin-management, cc-plugin-agents-md, cc-plugin-telemetry, cc-plugin-plugin-authoring
+[2026-10-06T09:44:15.939Z] [22222222] tool  WebSearch: Core Web Vitals INP optimization 2026
+[2026-10-06T09:44:16.478Z] [22222222] tool  WebSearch: E-E-A-T content quality Google ranking guidance 2026
+[2026-10-06T09:44:16.823Z] [22222222] tool  WebSearch: schema markup structured data rich results best practices
+[2026-10-06T09:44:17.237Z] [22222222] tool  WebSearch: generative engine optimization AI Overviews citations SEO
+[2026-10-06T09:44:17.646Z] [22222222] tool  WebSearch: internal linking and site architecture SEO best practices
+[2026-10-06T09:44:27.360Z] Stopping: aborting job 22222222-2222-4222-8222-222222222222 (runner stopped)…
+[2026-10-06T09:44:27.375Z] [22222222] error Claude finished: error_during_execution, 7 turns, $0.1964
+[2026-10-06T09:44:27.908Z] [22222222] error Job failed: runner stopped
+[2026-10-06T09:44:27.908Z] [22222222] debug ClaudeError: runner stopped
+[2026-10-06T09:44:27.914Z] Job 22222222-2222-4222-8222-222222222222 failed: runner stopped
+[2026-10-06T09:44:27.915Z] Runner stopped

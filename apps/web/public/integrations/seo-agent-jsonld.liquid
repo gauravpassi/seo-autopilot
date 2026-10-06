@@ -1,0 +1,43 @@
+{%- comment -%}
+  SEO Autopilot: JSON-LD snippet (install once, see README.md).
+
+  Prints every schema object stored by the agent in the `seo_agent.jsonld` metafield
+  (type json, an array of schema.org objects) of the current product, collection, page,
+  blog article or blog, plus shop-level schema (shop.metafields.seo_agent.jsonld) on the
+  homepage. Each object becomes its own <script type="application/ld+json"> tag.
+
+  Usage, in layout/theme.liquid just before </head>:
+    {% render 'seo-agent-jsonld' %}
+
+  Safety: values are serialised with the `json` filter (never printed raw), and the agent
+  refuses to store schema containing "</script" or "<!--".
+{%- endcomment -%}
+<!-- seo-agent-jsonld -->
+{%- liquid
+  case request.page_type
+    when 'product'
+      assign seo_agent_resource = product.metafields.seo_agent.jsonld.value
+    when 'collection'
+      assign seo_agent_resource = collection.metafields.seo_agent.jsonld.value
+    when 'page'
+      assign seo_agent_resource = page.metafields.seo_agent.jsonld.value
+    when 'article'
+      assign seo_agent_resource = article.metafields.seo_agent.jsonld.value
+    when 'blog'
+      assign seo_agent_resource = blog.metafields.seo_agent.jsonld.value
+    when 'index'
+      assign seo_agent_resource = shop.metafields.seo_agent.jsonld.value
+    else
+      assign seo_agent_resource = nil
+  endcase
+-%}
+{%- if seo_agent_resource != blank -%}
+  {%- if seo_agent_resource['@type'] != blank -%}
+    {%- comment -%} A single object instead of an array {%- endcomment -%}
+<script type="application/ld+json" data-seo-agent="1">{{ seo_agent_resource | json }}</script>
+  {%- else -%}
+    {%- for seo_agent_schema in seo_agent_resource -%}
+<script type="application/ld+json" data-seo-agent="1">{{ seo_agent_schema | json }}</script>
+    {%- endfor -%}
+  {%- endif -%}
+{%- endif -%}

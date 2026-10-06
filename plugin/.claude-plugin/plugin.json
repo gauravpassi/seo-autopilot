@@ -1,0 +1,10 @@
+{
+  "name": "seo-autopilot",
+  "version": "0.1.0",
+  "description": "SEO Autopilot skills for Claude Code: turn claude-seo audit output into validated, machine-applicable fix proposals, and implement approved fixes in Next.js / Astro / static repositories.",
+  "author": {
+    "name": "Upcore Technologies"
+  },
+  "license": "MIT",
+  "keywords": ["seo", "autopilot", "claude-seo", "fixes", "json-ld", "nextjs", "astro"]
+}

@@ -1,0 +1,225 @@
+@import "tailwindcss";
+
+/*
+ * SEO Autopilot design tokens.
+ * Upcore navy + cyan. Every status colour has a matching "-soft" surface and a text-safe
+ * "-ink" variant so badges reach AA contrast in both themes.
+ */
+:root {
+  --paper: #f4f6fa;
+  --surface: #ffffff;
+  --raised: #fbfcfe;
+  --sunken: #eef2f7;
+  --ink: #0a1a33;
+  --ink-2: #33445f;
+  --muted: #5b6b84;
+  --line: #dbe2ec;
+  --line-strong: #c3cddb;
+  --navy: #0a1a33;
+  --navy-2: #12284a;
+
+  --accent: #00a3c4;
+  --accent-ink: #00718a;
+  --accent-soft: #e2f6fa;
+
+  --auto: #00a3c4;
+  --auto-ink: #00687f;
+  --auto-soft: #e2f6fa;
+  --approve: #e59a0b;
+  --approve-ink: #8a5300;
+  --approve-soft: #fff4dc;
+  --never: #64748b;
+  --never-ink: #3f4b5e;
+  --never-soft: #edf0f4;
+  --ok: #15803d;
+  --ok-ink: #116b33;
+  --ok-soft: #e4f6ea;
+  --bad: #dc2626;
+  --bad-ink: #a11b1b;
+  --bad-soft: #fde9e9;
+
+  --del-bg: #fde4e4;
+  --del-ink: #8f1717;
+  --ins-bg: #d9f5e3;
+  --ins-ink: #0f5e2c;
+
+  --shadow-1: 0 1px 0 rgb(10 26 51 / 0.04), 0 1px 2px rgb(10 26 51 / 0.06);
+  --shadow-2: 0 2px 4px rgb(10 26 51 / 0.05), 0 12px 32px -12px rgb(10 26 51 / 0.18);
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #06101e;
+    --surface: #0c1a2e;
+    --raised: #11233b;
+    --sunken: #081424;
+    --ink: #e7eef8;
+    --ink-2: #c3cfdf;
+    --muted: #8d9db5;
+    --line: #1c3150;
+    --line-strong: #2a4469;
+    --navy: #e7eef8;
+    --navy-2: #c3cfdf;
+
+    --accent: #22d3ee;
+    --accent-ink: #67e3f5;
+    --accent-soft: #0b2f3d;
+
+    --auto: #22d3ee;
+    --auto-ink: #7ae6f7;
+    --auto-soft: #0b2f3d;
+    --approve: #f5b740;
+    --approve-ink: #fcd48a;
+    --approve-soft: #33260a;
+    --never: #8796ab;
+    --never-ink: #c0cad8;
+    --never-soft: #1a2638;
+    --ok: #34d07a;
+    --ok-ink: #8ce8b2;
+    --ok-soft: #0b2c1d;
+    --bad: #f87171;
+    --bad-ink: #fca5a5;
+    --bad-soft: #3a1416;
+
+    --del-bg: #43171b;
+    --del-ink: #ffc0c0;
+    --ins-bg: #0f3a25;
+    --ins-ink: #a6f0c4;
+
+    --shadow-1: 0 1px 0 rgb(0 0 0 / 0.3);
+    --shadow-2: 0 12px 32px -12px rgb(0 0 0 / 0.6);
+    color-scheme: dark;
+  }
+}
+
+@theme inline {
+  --color-paper: var(--paper);
+  --color-surface: var(--surface);
+  --color-raised: var(--raised);
+  --color-sunken: var(--sunken);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-navy: var(--navy);
+  --color-navy-2: var(--navy-2);
+  --color-accent: var(--accent);
+  --color-accent-ink: var(--accent-ink);
+  --color-accent-soft: var(--accent-soft);
+  --color-auto: var(--auto);
+  --color-auto-ink: var(--auto-ink);
+  --color-auto-soft: var(--auto-soft);
+  --color-approve: var(--approve);
+  --color-approve-ink: var(--approve-ink);
+  --color-approve-soft: var(--approve-soft);
+  --color-never: var(--never);
+  --color-never-ink: var(--never-ink);
+  --color-never-soft: var(--never-soft);
+  --color-ok: var(--ok);
+  --color-ok-ink: var(--ok-ink);
+  --color-ok-soft: var(--ok-soft);
+  --color-bad: var(--bad);
+  --color-bad-ink: var(--bad-ink);
+  --color-bad-soft: var(--bad-soft);
+  --color-del-bg: var(--del-bg);
+  --color-del-ink: var(--del-ink);
+  --color-ins-bg: var(--ins-bg);
+  --color-ins-ink: var(--ins-ink);
+  --font-sans: var(--font-dm-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-space-grotesk), var(--font-dm-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", "Cascadia Code", Menlo, Consolas, monospace;
+  --shadow-card: var(--shadow-1);
+  --shadow-pop: var(--shadow-2);
+}
+
+html {
+  background: var(--paper);
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-feature-settings: "ss01";
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  letter-spacing: -0.015em;
+  text-wrap: balance;
+}
+
+.num {
+  font-family: var(--font-display);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
+
+.tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+::selection {
+  background: var(--accent-soft);
+  color: var(--ink);
+}
+
+dialog::backdrop {
+  background: rgb(6 16 30 / 0.55);
+  backdrop-filter: blur(2px);
+}
+
+.skeleton {
+  background: linear-gradient(90deg, var(--sunken) 0%, var(--line) 50%, var(--sunken) 100%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s ease-in-out infinite;
+  border-radius: 8px;
+}
+@keyframes shimmer {
+  from { background-position: 200% 0; }
+  to { background-position: -200% 0; }
+}
+
+@keyframes toast-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: none; }
+}
+.toast-in { animation: toast-in 180ms ease-out; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Markdown report */
+.prose-report { color: var(--ink-2); line-height: 1.65; max-width: 76ch; }
+.prose-report h1 { font-size: 1.6rem; margin: 1.6rem 0 0.6rem; color: var(--ink); font-weight: 600; }
+.prose-report h2 { font-size: 1.25rem; margin: 1.6rem 0 0.5rem; color: var(--ink); font-weight: 600; }
+.prose-report h3 { font-size: 1.05rem; margin: 1.2rem 0 0.4rem; color: var(--ink); font-weight: 600; }
+.prose-report p, .prose-report ul, .prose-report ol, .prose-report table, .prose-report pre, .prose-report blockquote { margin: 0.7rem 0; }
+.prose-report ul { list-style: disc; padding-left: 1.3rem; }
+.prose-report ol { list-style: decimal; padding-left: 1.3rem; }
+.prose-report li { margin: 0.2rem 0; }
+.prose-report a { color: var(--accent-ink); text-decoration: underline; text-underline-offset: 2px; }
+.prose-report code { font-family: var(--font-mono); font-size: 0.86em; background: var(--sunken); padding: 0.1em 0.35em; border-radius: 4px; }
+.prose-report pre { background: var(--sunken); padding: 0.9rem 1rem; border-radius: 10px; overflow-x: auto; font-size: 0.85rem; }
+.prose-report pre code { background: none; padding: 0; }
+.prose-report table { width: 100%; border-collapse: collapse; font-size: 0.9rem; display: block; overflow-x: auto; }
+.prose-report th, .prose-report td { border-bottom: 1px solid var(--line); padding: 0.45rem 0.6rem; text-align: left; vertical-align: top; }
+.prose-report th { color: var(--ink); font-weight: 600; }
+.prose-report blockquote { border-left: 3px solid var(--accent); padding-left: 0.9rem; color: var(--muted); }
+.prose-report hr { border: 0; border-top: 1px solid var(--line); margin: 1.5rem 0; }
+.prose-report strong { color: var(--ink); }
