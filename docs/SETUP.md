@@ -3,6 +3,10 @@
 About 30 minutes end to end. Order: database → control panel → runner on your PC → first site →
 notifications (optional).
 
+**Upcore's live setup:** panel at https://seo-autopilot-roan.vercel.app (Vercel project
+`seo-autopilot`, functions in Mumbai), database in Supabase project `seo-autopilot`
+(ref `bxvtecqrvjmrpfracmiy`, Mumbai). Steps 1–2 are done for it; start at step 3.
+
 ## 1. Database (Supabase)
 
 1. Create a Supabase project (the `seo-autopilot` project in Mumbai already exists for Upcore).
