@@ -84,9 +84,12 @@ export function ChangesTab({ siteId, changes, status, canEdit }: { siteId: strin
                       <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
                         <span className="text-[14.5px] font-semibold">{CHANGE_TYPE[c.type as ChangeType]?.label ?? c.type}</span>
                         <StatusBadge status={c.status} />
-                        <span className="hidden sm:inline-flex">
-                          <TierBadge tier={c.tier} />
-                        </span>
+                        {/* Risk tier only matters while a decision is open; once decided, the status says it all. */}
+                        {(c.status === "pending_approval" || c.status === "blocked") && (
+                          <span className="hidden sm:inline-flex">
+                            <TierBadge tier={c.tier} />
+                          </span>
+                        )}
                       </div>
                       <p className="mt-0.5 truncate text-[12.5px] text-muted">
                         {pathOf(c.target?.url)} · {timeAgo(c.created_at)}

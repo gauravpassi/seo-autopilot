@@ -25,6 +25,9 @@ export function OverviewTab({
     .map((a) => a.health_score)
     .filter((v): v is number => typeof v === "number")
     .reverse();
+  // A page audit doesn't overwrite the site's overall score; fall back to it until a full audit exists.
+  const score = site.health_score ?? (typeof latest?.health_score === "number" ? latest.health_score : null);
+  const fromPageAudit = site.health_score == null && score != null;
   const delta = trend.length >= 2 ? trend[trend.length - 1] - trend[trend.length - 2] : null;
   const categories = ((latest?.categories ?? []) as Array<{ name?: string; score?: number | string; findings?: unknown[] }>)
     .filter((c) => c.name)
@@ -41,9 +44,15 @@ export function OverviewTab({
           <div className="grid grid-cols-2 gap-6 sm:grid-cols-4">
             <Stat
               label="Health score"
-              value={site.health_score ?? "–"}
-              tone={healthTone(site.health_score) === "neutral" ? undefined : healthTone(site.health_score)}
-              hint={delta === null ? "out of 100" : `${delta >= 0 ? "+" : ""}${delta} since previous audit`}
+              value={score ?? "–"}
+              tone={healthTone(score) === "neutral" ? undefined : healthTone(score)}
+              hint={
+                fromPageAudit
+                  ? "from a page audit · run a full audit for the site score"
+                  : delta === null
+                    ? "out of 100"
+                    : `${delta >= 0 ? "+" : ""}${delta} since previous audit`
+              }
             />
             <Stat label="Waiting for approval" value={statusCounts.pending_approval ?? 0} tone={(statusCounts.pending_approval ?? 0) > 0 ? "approve" : undefined} hint={<Link className="underline underline-offset-2" href="/approvals">Review</Link>} />
             <Stat label="Live changes" value={live} tone="ok" hint="Applied and checked" />

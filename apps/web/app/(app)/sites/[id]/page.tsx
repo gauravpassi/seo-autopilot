@@ -48,7 +48,7 @@ export default async function SitePage({
 
   const [{ count: pendingCount }, { data: latestAudit }] = await Promise.all([
     supabase.from("changes").select("id", { count: "exact", head: true }).eq("site_id", id).eq("status", "pending_approval"),
-    supabase.from("audits").select("id, created_at").eq("site_id", id).order("created_at", { ascending: false }).limit(1).maybeSingle(),
+    supabase.from("audits").select("id, created_at, health_score").eq("site_id", id).order("created_at", { ascending: false }).limit(1).maybeSingle(),
   ]);
 
   let body: React.ReactNode = null;
@@ -118,7 +118,7 @@ export default async function SitePage({
   return (
     <>
       <header className="mb-5 flex items-center gap-4">
-        <HealthRing score={site.health_score} size={60} className="hidden sm:grid" />
+        <HealthRing score={site.health_score ?? (latestAudit as { health_score?: number | null } | null)?.health_score ?? null} size={60} className="hidden sm:grid" />
         <div className="min-w-0">
           <h1 className="truncate text-[26px] leading-tight font-semibold sm:text-[30px]">{site.name}</h1>
           <p className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1.5 text-[14px] text-muted">
