@@ -1,6 +1,8 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useEffect, useRef } from "react";
 import { CircleAlert, CircleCheck, Clock } from "lucide-react";
 import type { Job, JobLog } from "@/lib/types";
 import { Spinner } from "@/components/ui/spinner";
@@ -17,7 +19,15 @@ export function ConnectionTest({ jobId, onDone }: { jobId: string; onDone?: (ok:
   const warnings = Array.isArray(result?.warnings) ? (result!.warnings as string[]) : [];
   const lastLog = data?.logs?.[data.logs.length - 1];
 
-  if (finished && onDone) queueMicrotask(() => onDone(ok));
+  // Once the test finishes: tell the parent once, and re-render server data (e.g. the sites list status).
+  const router = useRouter();
+  const reported = useRef(false);
+  useEffect(() => {
+    if (!finished || reported.current) return;
+    reported.current = true;
+    onDone?.(ok);
+    router.refresh();
+  }, [finished, ok, onDone, router]);
 
   return (
     <div className="rounded-xl border border-line bg-raised p-4" aria-live="polite">

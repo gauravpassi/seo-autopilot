@@ -10,7 +10,10 @@ export type TabItem = { id: string; label: string; count?: number | null };
  * URL-driven tabs (?tab=) so each tab is linkable and server-rendered.
  * Arrow keys move between tabs per the WAI-ARIA tabs pattern.
  */
-export function LinkTabs({ items, active, hrefFor, label }: { items: TabItem[]; active: string; hrefFor: (id: string) => string; label: string }) {
+export type LinkTabItem = TabItem & { href: string };
+
+/** Hrefs are passed as data (not a function) so Server Components can render this. */
+export function LinkTabs({ items, active, label }: { items: LinkTabItem[]; active: string; label: string }) {
   const listRef = useRef<HTMLDivElement>(null);
   return (
     <div className="-mx-4 overflow-x-auto px-4 sm:mx-0 sm:px-0">
@@ -33,7 +36,7 @@ export function LinkTabs({ items, active, hrefFor, label }: { items: TabItem[]; 
           return (
             <Link
               key={t.id}
-              href={hrefFor(t.id)}
+              href={t.href}
               role="tab"
               aria-selected={on}
               tabIndex={on ? 0 : -1}

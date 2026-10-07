@@ -137,8 +137,7 @@ export default async function SitePage({
       <LinkTabs
         label="Site sections"
         active={tab}
-        hrefFor={(t) => (t === "overview" ? `/sites/${id}` : `/sites/${id}?tab=${t}`)}
-        items={[
+        items={([
           { id: "overview", label: "Overview" },
           { id: "findings", label: "Findings" },
           { id: "changes", label: "Changes", count: pendingCount },
@@ -146,7 +145,10 @@ export default async function SitePage({
           { id: "schedules", label: "Schedules" },
           { id: "policy", label: "Policy" },
           { id: "connection", label: "Connection" },
-        ]}
+        ] as Array<{ id: string; label: string; count?: number | null }>).map((t) => ({
+          ...t,
+          href: t.id === "overview" ? `/sites/${id}` : `/sites/${id}?tab=${t.id}`,
+        }))}
       />
       <div className="mt-6" role="tabpanel" aria-label={tab}>
         {body}
