@@ -106,6 +106,34 @@ export function loadAuditData(path: string, defaultUrl?: string): AuditData {
   return data;
 }
 
+/**
+ * Refuse audits that didn't really run. Claude is told never to invent findings, so when its
+ * tools were blocked it writes an (honest) empty envelope. Storing that would show a bogus
+ * health score and feed nothing useful into proposals, so fail the job with the reason instead.
+ */
+export function assertAuditRan(data: AuditData, denials: unknown[], wroteLate: boolean): void {
+  const scored =
+    (typeof data.summary.health_score === "number" && data.summary.health_score > 0) ||
+    data.categories.some((c) => typeof c.score === "number");
+  const blocked = denials
+    .map((d) => {
+      const o = (d ?? {}) as { tool_name?: string; tool_input?: { command?: string; url?: string } };
+      const what = o.tool_input?.command ?? o.tool_input?.url ?? "";
+      return `${o.tool_name ?? "tool"}${what ? `: ${what.slice(0, 80)}` : ""}`;
+    })
+    .slice(0, 3);
+  if (denials.length && (wroteLate || !scored)) {
+    throw new Error(
+      `claude-seo couldn't run its analysis: ${denials.length} tool call(s) were blocked by the runner's permissions ` +
+        `(${blocked.join("; ")}). Nothing was stored. If the site is reachable, re-run the audit; ` +
+        `otherwise check the site address and that it is publicly reachable or on an allowed local address.`,
+    );
+  }
+  if (!scored) {
+    throw new Error("The audit produced no scores, so it most likely didn't analyse the site. Nothing was stored.");
+  }
+}
+
 /** Merge per-page envelopes into one (page depth with several URLs). */
 export function mergeAuditData(parts: Array<{ url: string; data: AuditData }>): AuditData {
   if (parts.length === 1) return parts[0].data;
@@ -145,6 +173,7 @@ async function runOne(ctx: JobContext, prompt: string, cwd: string, domain: stri
   const run = await ctx.claude({ prompt: prompt + envelopeInstructions(domain, pageUrl), cwd, timeoutMs });
   if (run.is_error) throw new Error(`claude-seo audit failed: ${run.result || run.subtype || "unknown error"}`);
   let envelope = findEnvelope(cwd, domain);
+  const wroteLate = !envelope;
   if (!envelope && run.session_id) {
     throwIfAborted(ctx.signal);
     ctx.log("warn", "audit-data.json was not written; asking Claude to write the envelope from its findings");
@@ -164,8 +193,10 @@ async function runOne(ctx: JobContext, prompt: string, cwd: string, domain: stri
   if (!envelope) throw new Error(`claude-seo did not produce ${domain}-audit/audit-data.json`);
   ctx.log("info", `Found audit envelope: ${relative(ctx.workDir, envelope)}`);
   const auditDir = join(envelope, "..");
+  const data = loadAuditData(envelope, pageUrl);
+  assertAuditRan(data, run.permission_denials ?? [], wroteLate);
   return {
-    data: loadAuditData(envelope, pageUrl),
+    data,
     report: readIfExists(join(auditDir, "FULL-AUDIT-REPORT.md")),
     plan: readIfExists(join(auditDir, "ACTION-PLAN.md")),
   };

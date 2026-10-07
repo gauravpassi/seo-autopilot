@@ -313,6 +313,18 @@ describe("WordPress adapter with seo-agent-bridge", () => {
     expect(state.seo.get(12)?.jsonld).toEqual([]);
   });
 
+  it("jsonld_fix hands plugin-printed markup to a person instead of adding a conflicting block", async () => {
+    const { adapter, state } = makeAdapter({ bridge: true });
+    const c = change("jsonld_fix", `${SITE}/hello-world/`, {
+      schema_type: "CollectionPage",
+      replaces_type: "Article",
+      schema: { name: "Dinner sets" },
+    });
+    c.target.resource = (await adapter.resolve(c.target.url, c.type)) ?? undefined;
+    await expect(adapter.apply(c)).rejects.toThrow(/^manual: The Article markup .* comes from the SEO plugin/);
+    expect(state.seo.get(12)?.jsonld ?? null).toBeNull(); // nothing written
+  });
+
   it("robots_txt and llms_txt round trip", async () => {
     const { adapter, state } = makeAdapter({ bridge: true });
     state.files.robots = "User-agent: *\nDisallow: /wp-admin/\n";

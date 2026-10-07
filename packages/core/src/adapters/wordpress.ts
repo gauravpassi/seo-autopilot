@@ -1110,6 +1110,16 @@ export function createWordPressAdapter(ctx: AdapterContext, options: WordPressAd
       if (!schema["@context"]) schema["@context"] = "https://schema.org";
       if (!schema["@type"]) schema["@type"] = schemaType;
       const replaceType = type === "jsonld_fix" ? String(after.replaces_type ?? schemaType) : schemaType;
+      if (type === "jsonld_fix" && !blocks.some((b) => hasType(b, replaceType))) {
+        // The wrong block is printed by the SEO plugin or theme, which the bridge can't remove.
+        // Adding ours next to it would leave two contradicting descriptions of the page, so hand it to a person.
+        throw new Error(
+          `manual: The ${replaceType} markup on this page comes from the SEO plugin or theme, not from SEO Autopilot, ` +
+            `so it can't be replaced automatically without leaving conflicting markup. In the SEO plugin, change this ` +
+            `page's schema type to ${schemaType} (Rank Math: edit the page → Schema tab; Yoast: Schema tab in the sidebar), ` +
+            `or turn its schema off for this page and approve this fix again.`,
+        );
+      }
       const next = blocks.filter((b) => !hasType(b, replaceType) && !hasType(b, schemaType));
       next.push(schema);
       await writeSeo("bridge", ref, { jsonld: next });

@@ -101,6 +101,13 @@ You are running unattended inside the SEO Autopilot runner on the site owner's c
 5. Nobody is watching the session. Do not ask questions or wait for confirmation; make the best
    decision you can, note assumptions in your output, and finish.
 6. Do not print community footers, promotional links or upsell messages.
+7. Shell access is limited to claude-seo's own launcher. Fetch, render and parse pages ONLY
+   through it, e.g. \`"<claude-seo>/scripts/claude-seo" run render_page.py <url> --mode auto --json\`
+   or \`run fetch_page.py <url> --json\`, one command per Bash call. curl, wget, cd, mkdir, pipes,
+   \`&&\` and every other shell command are blocked. Use the Write tool to create files (it
+   creates folders). WebFetch also works for public pages.
+8. If a tool is blocked or a page can't be fetched, say so plainly in your output and do not
+   invent findings, scores or page content.
 `;
 
 export function ensureRulesFile(path = join(baseDir(), "runner-rules.md")): string {

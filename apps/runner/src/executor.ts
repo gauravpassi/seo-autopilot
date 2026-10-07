@@ -10,6 +10,7 @@ import { analysisTools, runClaude, truncate } from "./claude";
 import { claudeSeoLauncher, claudeSeoPath, pluginPath, type RunnerConfig } from "./config";
 import { HANDLERS } from "./jobs/index";
 import type { ClaudeCall, JobContext, JobHandler, JobResult } from "./jobs/context";
+import { localTargetFor } from "./local-targets";
 import { JobLogger } from "./logger";
 import { unsealSecrets } from "./secrets";
 import { jobWorkDir } from "./workspace";
@@ -51,6 +52,9 @@ export async function executeJob(o: ExecuteOptions): Promise<ExecuteOutcome> {
 
     const secrets: SiteSecrets | null = site ? unsealSecrets(o.secret, config.private_key_pem, site.platform) : null;
     const workDir = jobWorkDir(site?.id ?? null, job.id);
+    // Local/private sites (dev server, LAN staging) need claude-seo's explicit opt-in; public sites never get it.
+    const localTarget = site ? localTargetFor(site.url) : null;
+    if (localTarget) logger.log("info", `Site is on a local/private address; allowing claude-seo to fetch ${localTarget} (CLAUDE_SEO_LOCAL_TARGETS)`);
     const policy = policyWithDefaults(site?.policy ?? {});
     let adapter: SiteAdapter | null = null;
 
@@ -95,6 +99,7 @@ export async function executeJob(o: ExecuteOptions): Promise<ExecuteOutcome> {
           jsonSchema: call.jsonSchema,
           resume: call.resume,
           timeoutMs: call.timeoutMs,
+          env: localTarget ? { CLAUDE_SEO_LOCAL_TARGETS: localTarget } : undefined,
           signal: logger.signal,
           log: (level, message) => logger.log(level, message),
           claudeBin: config.claude_bin,
